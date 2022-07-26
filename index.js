@@ -1,52 +1,59 @@
-const dayElement = document.querySelector(".days");
-const hourElement = document.querySelector(".hours");
-const minuteElement = document.querySelector(".minutes");
-const secondElement = document.querySelector(".seconds");
+const daysElement = document.querySelector(".days");
+const hoursElement = document.querySelector(".hours");
+const minutesElement = document.querySelector(".minutes");
+const secondsElement = document.querySelector(".seconds");
 const heading = document.querySelector("h1");
 const counterTimer = document.querySelector(".counterTimer");
 
-const second = 1000
-,minute = 60 * second
-,hour = 60 * minute
-,day = 24 * hour;
+// Converting second,minute,hour,day in miliseconds
+const second = 1000,
+  minute = 60 * second,
+  hour = 60 * minute,
+  day = 24 * hour;
 
-const timerFunction = ()=> {
+const timerFunction = () => {
+  // Generating current Date in mm/dd/yyyy
+  let now = new Date(),
+    dd = String(now.getDate()).padStart(2, "0"),
+    mm = String(now.getMonth() + 1).padStart(2, "0"),
+    yyyy = now.getFullYear();
+  now = `${mm}/${dd}/${yyyy}`;
 
+  // Taking Target Date from User
+  const enteredDay = prompt("Enter Day").padStart(2, "0");
+  const enteredMonth = prompt("Enter Month").padStart(2, "0");
+  const enteredYear = prompt("Enter Year").padStart(2, "0");
 
-    const now = new Date();
-    let dd = String(now.getDate()).padStart(2, "0");
-    let mm = String(now.getMonth() + 1).padStart(2, "0");
-    let yyyy = String(now.getFullYear());
+  let targetDate = `${enteredMonth}/${enteredDay}/${enteredYear}`;
 
-    const enteredday = prompt("Enter Day").padStart(2, "0");
-    const enteredMonth = prompt("Enter Month").padStart(2, "0");
-    const enteredYear = prompt("Enter Year").padStart(2, "0");
+  const intervalId = setInterval(() => {
+    // coverting targetDate in Miliseconds
+    const timer = new Date(targetDate).getTime();
+    // Taking current Date in Miliseconds
+    const today = new Date().getTime();
 
-    const targetDate = `${enteredMonth}/${enteredday151}/${enteredYear}`;
+    // Finding Difference target Date and today's date
+    const difference = timer - today;
 
-    console.log(targetDate);
-    
-    const intervalId = setInterval(() => {
-        
-        const timer = new Date(targetDate).getTime();
-        const today = new Date().getTime();
-        const difference = timer - today;
-        const leftDay = Math.floor(difference/day);
-        const leftHour = Math.floor((difference % day) / hour);
-        const leftMinute = Math.floor((difference % hour ) /minute);
-        const leftSecond= Math.floor((difference % minute ) / second);
+    // finding left days,hours,minutes,seconds
+    const leftDay = Math.floor(difference / day);
+    const leftHour = Math.floor((difference % day) / hour);
+    const leftMinute = Math.floor((difference % hour) / minute);
+    const leftSecond = Math.floor((difference % minute) / second);
 
-        dayElement.innerText = leftDay;
-        hourElement.innerText = leftHour;
-        minuteElement.innerText = leftMinute;
-        secondElement.innerText = leftSecond;
+    // Showing Timer in DOM
+    daysElement.innerText = leftDay;
+    hoursElement.innerText = leftHour;
+    minutesElement.innerText = leftMinute;
+    secondsElement.innerText = leftSecond;
 
-        if(difference < 0) {
-            counterTimer.style.display = "none";
-            heading.innerText = "Time Up";
-            clearInterval(intervalId);
-        }
-    }, 1000);
+    // Stop Set Interval after reaching the target time
+    if (difference < 0) {
+      counterTimer.style.display = "none";
+      heading.innerText = "Time's Up";
+      clearInterval(intervalId);
+    }
+  }, 0);
 };
 
 timerFunction();
